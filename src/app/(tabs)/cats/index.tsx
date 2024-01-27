@@ -26,7 +26,7 @@ const Cats = () => {
 
   return (
     <View>
-      <Stack.Screen options={{ title: 'Cats' }} />
+      {/* <Stack.Screen options={{ title: 'Cats' }} /> */}
       <FlatList
         data={cats}
         keyExtractor={({ id }) => id}
