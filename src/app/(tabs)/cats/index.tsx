@@ -1,21 +1,21 @@
-import { Link, Stack } from "expo-router";
-import { useEffect, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { Link, Stack } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
-const Dogs = () => {
-  const [dogs, setDogs] = useState([]);
+const Cats = () => {
+  const [cats, setCats] = useState([]);
 
   useEffect(() => {
-    fetch("https://api.thedogapi.com/v1/breeds?limit=20")
+    fetch('https://api.thecatapi.com/v1/breeds?limit=20')
       .then((response) => response.json())
       .then((json) => {
-        setDogs(json);
+        setCats(json);
       })
       .catch((error) => console.error(error));
   }, []);
 
   const renderItem = ({ item }: { item: any }) => (
-    <Link href={`/dogs/${item.id}`} asChild>
+    <Link href={`/cats/${item.id}`} asChild>
       <Pressable style={styles.itemContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.nameText}>{item.name}</Text>
@@ -26,9 +26,9 @@ const Dogs = () => {
 
   return (
     <View>
-      <Stack.Screen options={{ title: "Dogs" }} />
+      <Stack.Screen options={{ title: 'Cats' }} />
       <FlatList
-        data={dogs}
+        data={cats}
         keyExtractor={({ id }) => id}
         renderItem={renderItem}
       />
@@ -36,22 +36,22 @@ const Dogs = () => {
   );
 };
 
-export default Dogs;
+export default Cats;
 
 const styles = StyleSheet.create({
   itemContainer: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: '#eee',
   },
   textContainer: {
     marginLeft: 16,
   },
   nameText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
