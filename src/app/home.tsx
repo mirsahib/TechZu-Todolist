@@ -1,13 +1,7 @@
-import {
-  FlatList,
-  Modal,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import { Link } from 'expo-router';
+import Card from '../components/Card';
+import AppModel from '../components/AppModal';
 
 const Home = () => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -24,11 +18,7 @@ const Home = () => {
     // Add more tasks as needed
   ];
   //@ts-ignore
-  const renderTaskCard = ({ item }) => (
-    <View style={styles.taskCard}>
-      <Text>{item.title}</Text>
-    </View>
-  );
+  const renderTaskCard = ({ item }) => <Card {...item} />;
 
   return (
     <View style={styles.container}>
@@ -38,25 +28,10 @@ const Home = () => {
         renderItem={renderTaskCard}
       />
       {/* modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => {
-          setModalVisible(!isModalVisible);
-        }}
-      >
-        <View style={styles.modalContainer}>
-          {/* Your modal content goes here */}
-          <View style={styles.modalContent}>
-            {/* Your modal content goes here */}
-            <Text>This is your modal content</Text>
-            <Pressable onPress={toggleModal}>
-              <Text>Close Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
+      <AppModel
+        isModalVisible={isModalVisible}
+        setModalVisible={setModalVisible}
+      />
 
       {/* Plus Button */}
       <Pressable onPress={toggleModal} style={styles.plusButton}>
@@ -94,40 +69,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center', // Center the text horizontally
-  },
-
-  taskCard: {
-    backgroundColor: 'white',
-    padding: 16,
-    marginVertical: 8,
-    borderRadius: 8,
-    elevation: 2, // Add elevation for shadow on Android
-    width: '100%', // Make the card full width
-  },
-  taskText: {
-    textAlign: 'left', // Align text to the left
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%', // Adjust the width as needed
-    height: '30%', // Adjust the height as needed
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
