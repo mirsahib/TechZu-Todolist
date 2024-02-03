@@ -1,12 +1,15 @@
 import { Stack } from 'expo-router';
+import { Text } from 'react-native';
 
 export default function HomeLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
+        headerTitle: 'Home',
+        headerRight: () => <Text>Right</Text>,
+        headerShown: true,
         headerStyle: {
-          backgroundColor: 'blue',
+          // backgroundColor: 'blue',
         },
         headerTintColor: 'white',
         headerTitleStyle: {
