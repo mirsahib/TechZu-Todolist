@@ -4,9 +4,11 @@
 
 This ToDoList Expo app is a simple mobile application built using Expo, React Native, and Firebase. It allows users to create, edit, delete, and mark tasks as completed.
 
-## Videos
+## Screenshot
 
-https://youtu.be/KGLV8HjZMT4
+<!-- https://youtu.be/KGLV8HjZMT4 -->
+
+![Demo](https://github.com/mirsahib/TechZu-Todolist/blob/master/screenshot/demo.gif)
 
 ## Installation
 
