@@ -9,7 +9,7 @@ import {
   Pressable,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 type IFormData = {
   email: string;
   password: string;
@@ -18,8 +18,6 @@ type IFormData = {
 };
 
 const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [toggleCreateAccount, setToggleCreateAccount] = useState(false);
   const {
     control,
@@ -30,6 +28,14 @@ const SignUp = () => {
 
   const onSubmit = (data: any) => {
     console.log('🚀 ~ onSubmit ~ data:', data);
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, data.email, data.password)
+      .then((userCredential) => {
+        console.log('🚀 ~ onSubmit ~ userCredential:', userCredential);
+      })
+      .catch((err) => {
+        console.log('🚀 ~ onSubmit ~ err:', err);
+      });
   };
 
   const handleCreateAccount = () => {
@@ -48,11 +54,12 @@ const SignUp = () => {
         control={control}
         render={({ field }) => (
           <TextInput
-            {...field}
             style={styles.input}
             placeholder="Email"
             keyboardType="email-address"
             autoCapitalize="none"
+            onChangeText={(val) => field.onChange(val)}
+            value={field.value}
           />
         )}
         name="email"
@@ -68,14 +75,12 @@ const SignUp = () => {
             placeholder="First Name"
             keyboardType="email-address"
             autoCapitalize="none"
-            onChangeText={(text) => setEmail(text)}
           />
           <TextInput
             style={styles.nameInput}
             placeholder="Last Name"
             keyboardType="email-address"
             autoCapitalize="none"
-            onChangeText={(text) => setEmail(text)}
           />
         </View>
       )}
@@ -85,13 +90,14 @@ const SignUp = () => {
         control={control}
         render={({ field }) => (
           <TextInput
-            {...field}
             style={styles.input}
             textContentType="password"
             placeholder="password"
             keyboardType="default"
             autoCapitalize="none"
             secureTextEntry={true}
+            onChangeText={(val) => field.onChange(val)}
+            value={field.value}
           />
         )}
         name="password"
