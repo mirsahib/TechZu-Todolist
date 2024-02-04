@@ -1,7 +1,7 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import Card from '../components/Card';
-import AppModel from '../components/AppModal';
+import Card from '../../components/Card';
+import AppModel from '../../components/AppModal';
 
 const Home = () => {
   const [isModalVisible, setModalVisible] = useState(false);
