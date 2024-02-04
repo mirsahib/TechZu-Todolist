@@ -3,7 +3,18 @@ import { EvilIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+} from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
+
 type CardProps = {
   item: {
     id: string;
@@ -14,17 +25,56 @@ type CardProps = {
   deletebtn?: React.ReactNode;
 };
 
-export const Check = (item: CardProps) => {
+export const Check = (props: CardProps) => {
+  const { item, userId } = props;
+  const router = useRouter();
+
+  const handleCheck = async () => {
+    console.log('check', item.id);
+    const q = query(
+      collection(db, 'tasks'),
+      where('userId', '==', userId),
+      where('tasks.id', '==', item.id),
+    );
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (doc) => {
+      await updateDoc(doc.ref, {
+        'tasks.completed': true,
+      });
+    });
+    router.navigate('/home');
+
+    // console.log('🚀 ~ handleCheck ~ q:', q);
+  };
+
   return (
-    <Pressable onPress={() => console.log('check')} style={{}}>
+    <Pressable onPress={handleCheck} style={{}}>
       <AntDesign name="check" size={24} color="black" />
     </Pressable>
   );
 };
 
-export const Delete = (item: CardProps) => {
+export const Delete = (props: CardProps) => {
+  const { item, userId } = props;
+  const router = useRouter();
+
+  const handleDelete = async () => {
+    console.log('check', item.id);
+    const q = query(
+      collection(db, 'tasks'),
+      where('userId', '==', userId),
+      where('tasks.id', '==', item.id),
+    );
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+    router.navigate('/home');
+  };
   return (
-    <Pressable onPress={() => console.log('trash', item.item.id)} style={{}}>
+    <Pressable onPress={() => handleDelete()}>
       <EvilIcons name="trash" size={24} color="black" />
     </Pressable>
   );
@@ -32,48 +82,33 @@ export const Delete = (item: CardProps) => {
 
 const Card = (props: CardProps) => {
   const { item, userId, checkbtn, deletebtn } = props;
-  console.log('🚀 ~ Card ~ item:', item);
+  const router = useRouter();
+  // console.log('🚀 ~ Card ~ item:', item);
+  const navigateToTask = () => {
+    router.navigate({
+      pathname: `/home/task/${item.id}`,
+      params: { task: item.task, userId: userId },
+    });
+  };
   return (
-    <Link
-      href={{
-        pathname: `/home/task/${item.id}`,
-        params: { task: item.task },
-      }}
-      style={styles.taskCard}
-    >
-      <Pressable
+    <View style={styles.taskCard}>
+      <Pressable onPress={() => navigateToTask()}>
+        <View style={{}}>
+          <Text>{item.task}</Text>
+        </View>
+      </Pressable>
+
+      <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          width: '100%',
-          padding: 4,
+          width: '20%',
         }}
       >
-        <View style={{ width: 200, backgroundColor: 'orange' }}>
-          <Text>{item.task}</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '20%',
-            backgroundColor: 'red',
-          }}
-        >
-          {/* {checkbtn} */}
-          {/* {deletebtn} */}
-          {/* <Pressable onPress={() => console.log('check')} style={{}}>
-            <AntDesign name="check" size={24} color="black" />
-          </Pressable> */}
-          <Pressable
-            // onPress={() => console.log('trash', item.item.id)}
-            style={{}}
-          >
-            <EvilIcons name="trash" size={24} color="black" />
-          </Pressable>
-        </View>
-      </Pressable>
-    </Link>
+        {checkbtn}
+        {deletebtn}
+      </View>
+    </View>
   );
 };
 
@@ -81,8 +116,8 @@ export default Card;
 
 const styles = StyleSheet.create({
   taskCard: {
-    //flexDirection: 'row',
-    //justifyContent: 'space-between',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     backgroundColor: 'white',
     padding: 16,
     marginVertical: 8,

@@ -1,30 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+} from 'firebase/firestore';
+import { db } from '../../../../firebaseConfig';
 
 const SingleTask = () => {
   const params = useLocalSearchParams();
+  const router = useRouter();
 
   // params;
   //@ts-ignore
-  console.log('🚀 ~ SingleTask ~ params:', params);
-  const { task } = params;
+  const { task, userId, id } = params;
+  console.log('🚀 ~ SingleTask ~ params:', task, id, userId);
   // console.log('🚀 ~ SingleTask ~ item:', item.task);
   //@ts-ignore
-  const [taskText, setTaskText] = useState(task as string);
+  const [taskText, setTaskText] = useState('');
 
-  useEffect(() => {
-    setTaskText(task as string);
-  }, [params]);
+  // useEffect(() => {
+  //   setTaskText(task as string);
+  // }, [params]);
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     // Implement your edit logic here
     console.log('Edit button pressed');
+    const q = query(
+      collection(db, 'tasks'),
+      where('userId', '==', userId),
+      where('tasks.id', '==', id),
+    );
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (doc) => {
+      await updateDoc(doc.ref, {
+        'tasks.task': taskText,
+      });
+    });
+    router.back();
   };
 
   return (
     <View style={styles.container}>
       <TextInput
+        placeholder={task as string}
         style={styles.textInput}
         multiline
         value={taskText}

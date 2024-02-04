@@ -23,11 +23,12 @@ const Home = () => {
     setModalVisible(!isModalVisible);
     const id = generateId();
     console.log('🚀 ~ handleTaskSubmit ~ id:', id);
+
     const docRef = await addDoc(collection(db, 'tasks'), {
       tasks: { id: id, task: task, completed: false },
-
       userId: user?.uid,
     });
+
     console.log('Document written with ID: ', docRef.id);
     setTask('');
   };
@@ -37,8 +38,8 @@ const Home = () => {
     <Card
       item={item}
       userId={user?.uid ?? ''}
-      checkbtn={<Check item={item} userId={user?.uid ?? ''} />}
-      deletebtn={<Delete item={item} userId={user?.uid ?? ''} />}
+      // checkbtn={<Check item={item} userId={user?.uid ?? ''} />}
+      // deletebtn={<Delete item={item} userId={user?.uid ?? ''} />}
     />
   );
 

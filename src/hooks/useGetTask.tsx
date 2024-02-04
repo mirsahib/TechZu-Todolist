@@ -6,6 +6,7 @@ interface Taskdoc {
   tasks: {
     id: string;
     task: string;
+    completed: boolean;
   };
 }
 type task = Taskdoc['tasks'];
