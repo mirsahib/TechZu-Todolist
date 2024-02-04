@@ -1,21 +1,30 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Button } from 'react-native';
-
+import { useGetUser } from '../../hooks/useGetUser';
+import { auth } from '../../../firebaseConfig';
+import { useRouter } from 'expo-router';
 const Setting = () => {
+  const { user } = useGetUser();
+  const router = useRouter();
+  console.log('🚀 ~ Setting ~ user:', user);
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push('/login');
+  };
   return (
     <View style={styles.container}>
       <View>
         {/* Display user information */}
         {/* <Image source={{ uri: '' }} style={styles.profileImage} /> */}
         <View style={styles.taskCard}>
-          <Text style={styles.userInfoText}>{`Name: `}</Text>
+          <Text style={styles.userInfoText}>{`Id: ${user?.uid} `}</Text>
         </View>
         <View style={styles.taskCard}>
-          <Text style={styles.userInfoText}>{`Email: `}</Text>
+          <Text style={styles.userInfoText}>{`Email: ${user?.email} `}</Text>
         </View>
         {/* Logout button */}
-        <Button title="Logout" onPress={() => {}} />
+        <Button title="Logout" onPress={() => handleLogout()} />
       </View>
     </View>
   );
