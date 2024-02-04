@@ -5,10 +5,33 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Link } from 'expo-router';
 type CardProps = {
-  id: string;
-  task: string;
+  item: {
+    id: string;
+    task: string;
+  };
+  userId: string;
+  checkbtn?: React.ReactNode;
+  deletebtn?: React.ReactNode;
 };
-const Card = (item: CardProps) => {
+
+export const Check = (item: CardProps) => {
+  return (
+    <Pressable onPress={() => console.log('check')} style={{}}>
+      <AntDesign name="check" size={24} color="black" />
+    </Pressable>
+  );
+};
+
+export const Delete = (item: CardProps) => {
+  return (
+    <Pressable onPress={() => console.log('trash', item.item.id)} style={{}}>
+      <EvilIcons name="trash" size={24} color="black" />
+    </Pressable>
+  );
+};
+
+const Card = (props: CardProps) => {
+  const { item, userId, checkbtn, deletebtn } = props;
   console.log('🚀 ~ Card ~ item:', item);
   return (
     <Link
@@ -26,33 +49,29 @@ const Card = (item: CardProps) => {
           padding: 4,
         }}
       >
-        <View>
+        <View style={{ width: 200, backgroundColor: 'orange' }}>
           <Text>{item.task}</Text>
         </View>
-        {/* <View
+        <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             width: '20%',
+            backgroundColor: 'red',
           }}
         >
+          {/* {checkbtn} */}
+          {/* {deletebtn} */}
+          {/* <Pressable onPress={() => console.log('check')} style={{}}>
+            <AntDesign name="check" size={24} color="black" />
+          </Pressable> */}
           <Pressable
-            onPress={() => {
-              console.log('trash', item.id);
-            }}
+            // onPress={() => console.log('trash', item.item.id)}
             style={{}}
           >
             <EvilIcons name="trash" size={24} color="black" />
           </Pressable>
-          <Pressable
-            onPress={() => {
-              console.log('check');
-            }}
-            style={{}}
-          >
-            <AntDesign name="check" size={24} color="black" />
-          </Pressable>
-        </View> */}
+        </View>
       </Pressable>
     </Link>
   );

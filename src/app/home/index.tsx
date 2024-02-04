@@ -1,6 +1,6 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import Card from '../../components/Card';
+import Card, { Check, Delete } from '../../components/Card';
 import AppModel from '../../components/AppModal';
 import { useGetUser } from '../../hooks/useGetUser';
 import { db } from '../../../firebaseConfig';
@@ -24,7 +24,7 @@ const Home = () => {
     const id = generateId();
     console.log('🚀 ~ handleTaskSubmit ~ id:', id);
     const docRef = await addDoc(collection(db, 'tasks'), {
-      tasks: { id: id, task: task },
+      tasks: { id: id, task: task, completed: false },
 
       userId: user?.uid,
     });
@@ -33,7 +33,14 @@ const Home = () => {
   };
 
   //@ts-ignore
-  const renderTaskCard = ({ item }) => <Card {...item} />;
+  const renderTaskCard = ({ item }) => (
+    <Card
+      item={item}
+      userId={user?.uid ?? ''}
+      checkbtn={<Check item={item} userId={user?.uid ?? ''} />}
+      deletebtn={<Delete item={item} userId={user?.uid ?? ''} />}
+    />
+  );
 
   return (
     <View style={styles.container}>
