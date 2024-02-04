@@ -2,7 +2,7 @@ import { Redirect } from 'expo-router';
 import { Text } from 'react-native';
 
 const Index = () => {
-  const auth = false;
+  const auth = true;
 
   return <>{auth ? <Redirect href="/home" /> : <Redirect href="/login" />}</>;
 };

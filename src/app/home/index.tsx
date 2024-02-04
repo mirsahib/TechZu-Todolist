@@ -1,36 +1,58 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../../components/Card';
 import AppModel from '../../components/AppModal';
+import { useGetUser } from '../../hooks/useGetUser';
+import { db } from '../../../firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
+import { getUserTasks } from '../../hooks/useGetTask';
+import { generateId } from '../../utils/generateId';
 
 const Home = () => {
   const [isModalVisible, setModalVisible] = useState(false);
-
+  const [task, setTask] = useState('');
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+  const { user } = useGetUser();
+  const { tasks } = getUserTasks(user?.uid ?? '');
+  console.log('🚀 ~ Home ~ user:', user?.uid);
 
-  // Sample list of tasks
-  const tasks = [
-    { id: '1', title: 'Task 1' },
-    { id: '2', title: 'Task 2' },
-    { id: '3', title: 'Task 3' },
-    // Add more tasks as needed
-  ];
+  const handleTaskSubmit = async () => {
+    console.log(task);
+    setModalVisible(!isModalVisible);
+    const id = generateId();
+    console.log('🚀 ~ handleTaskSubmit ~ id:', id);
+    const docRef = await addDoc(collection(db, 'tasks'), {
+      tasks: { id: id, task: task },
+
+      userId: user?.uid,
+    });
+    console.log('Document written with ID: ', docRef.id);
+    setTask('');
+  };
+
   //@ts-ignore
   const renderTaskCard = ({ item }) => <Card {...item} />;
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={tasks}
-        keyExtractor={(item) => item.id}
-        renderItem={renderTaskCard}
-      />
+      {tasks.length > 0 ? (
+        <FlatList
+          data={tasks}
+          keyExtractor={(item) => item.id}
+          renderItem={renderTaskCard}
+        />
+      ) : (
+        <Text style={styles.emptyTaskBar}>Task list is empty</Text>
+      )}
       {/* modal */}
       <AppModel
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
+        taskText={task}
+        onChangeTaskText={setTask}
+        saveTask={handleTaskSubmit}
       />
 
       {/* Plus Button */}
@@ -49,6 +71,12 @@ const styles = StyleSheet.create({
     padding: 16,
     // backgroundColor: 'orange',
   },
+  emptyTaskBar: {
+    textAlign: 'center',
+    fontSize: 18,
+    marginTop: 50,
+  },
+
   plusButton: {
     position: 'absolute',
     bottom: 16, // Adjust the distance from the bottom as needed

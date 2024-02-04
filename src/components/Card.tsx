@@ -6,11 +6,18 @@ import React from 'react';
 import { Link } from 'expo-router';
 type CardProps = {
   id: string;
-  title: string;
+  task: string;
 };
 const Card = (item: CardProps) => {
+  console.log('🚀 ~ Card ~ item:', item);
   return (
-    <Link href={`/home/task/${item.id}`} style={styles.taskCard}>
+    <Link
+      href={{
+        pathname: `/home/task/${item.id}`,
+        params: { task: item.task },
+      }}
+      style={styles.taskCard}
+    >
       <Pressable
         style={{
           flexDirection: 'row',
@@ -20,7 +27,7 @@ const Card = (item: CardProps) => {
         }}
       >
         <View>
-          <Text>{item.title}</Text>
+          <Text>{item.task}</Text>
         </View>
         {/* <View
           style={{

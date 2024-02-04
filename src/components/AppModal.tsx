@@ -8,13 +8,22 @@ import {
   TextInput,
 } from 'react-native';
 import React from 'react';
-
+import { MaterialIcons } from '@expo/vector-icons';
 type ModalProps = {
   isModalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  saveTask: () => void;
+  taskText: string;
+  onChangeTaskText: React.Dispatch<React.SetStateAction<string>>;
 };
 const AppModel = (props: ModalProps) => {
-  const { isModalVisible, setModalVisible } = props;
+  const {
+    isModalVisible,
+    setModalVisible,
+    taskText,
+    onChangeTaskText,
+    saveTask,
+  } = props;
   return (
     <Modal
       animationType="slide"
@@ -30,18 +39,18 @@ const AppModel = (props: ModalProps) => {
         <View style={styles.modalContent}>
           {/* Your modal content goes here */}
           <TextInput
+            multiline={true}
+            numberOfLines={4}
             style={styles.input}
             placeholder="Enter task"
+            onChangeText={(val) => {
+              onChangeTaskText(val);
+            }}
+            value={taskText}
             // Additional TextInput props can be added as needed
           />
-          <Pressable
-            style={styles.modalButton}
-            onPress={() => {
-              // Handle adding the task
-              setModalVisible(!isModalVisible);
-            }}
-          >
-            <Text style={styles.modalButtonText}>Add Task</Text>
+          <Pressable style={styles.modalButton} onPress={saveTask}>
+            <MaterialIcons name="input" size={24} color="white" />
           </Pressable>
         </View>
       </View>
@@ -59,11 +68,12 @@ const styles = StyleSheet.create({
     // backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
+    flexDirection: 'row',
     width: '100%', // Adjust the width as needed
-    height: '30%', // Adjust the height as needed
+    height: '20%', // Adjust the height as needed
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 20,
+    padding: 5,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -76,11 +86,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    height: 40,
+    height: '50%',
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 16,
-    width: '80%',
+    width: '70%',
     paddingHorizontal: 10,
   },
   modalButton: {
