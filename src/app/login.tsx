@@ -8,15 +8,28 @@ import {
   Text,
   Pressable,
 } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+
+type IFormData = {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+};
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toggleCreateAccount, setToggleCreateAccount] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormData>();
+  const [submittedData, setSubmittedData] = useState(null);
 
-  const handleLogin = () => {
-    // Implement your login logic here
-    console.log('Login pressed', email, password);
+  const onSubmit = (data: any) => {
+    console.log('🚀 ~ onSubmit ~ data:', data);
   };
 
   const handleCreateAccount = () => {
@@ -31,13 +44,22 @@ const SignUp = () => {
       </Text>
 
       {/* Email Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        onChangeText={(text) => setEmail(text)}
+      <Controller
+        control={control}
+        render={({ field }) => (
+          <TextInput
+            {...field}
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        )}
+        name="email"
+        rules={{ required: 'You must enter your email' }}
       />
+      {errors.email && <Text>{errors.email.message}</Text>}
+
       {/* name container */}
       {toggleCreateAccount && (
         <View style={styles.nameInputContainer}>
@@ -59,17 +81,28 @@ const SignUp = () => {
       )}
 
       {/* Password Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={(text) => setPassword(text)}
+      <Controller
+        control={control}
+        render={({ field }) => (
+          <TextInput
+            {...field}
+            style={styles.input}
+            textContentType="password"
+            placeholder="password"
+            keyboardType="default"
+            autoCapitalize="none"
+            secureTextEntry={true}
+          />
+        )}
+        name="password"
+        rules={{ required: 'You must enter your password' }}
       />
+      {errors.password && <Text>{errors.password.message}</Text>}
 
       {/* Login Button */}
       <Button
         title={toggleCreateAccount ? 'Create Account' : 'Login'}
-        onPress={handleLogin}
+        onPress={handleSubmit(onSubmit)}
       />
 
       {/* Create Account Section */}
