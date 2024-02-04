@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import {
   StyleSheet,
   View,
@@ -9,7 +9,11 @@ import {
   Pressable,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import { auth } from '../../firebaseConfig';
 type IFormData = {
   email: string;
   password: string;
@@ -25,16 +29,36 @@ const SignUp = () => {
     formState: { errors },
   } = useForm<IFormData>();
   const [submittedData, setSubmittedData] = useState(null);
+  const router = useRouter();
 
   const onSubmit = (data: any) => {
     console.log('🚀 ~ onSubmit ~ data:', data);
-    const auth = getAuth();
+    if (toggleCreateAccount) {
+      handleSignUp(data);
+    } else {
+      handleLogin(data);
+    }
+  };
+  const handleSignUp = (data: any) => {
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
         console.log('🚀 ~ onSubmit ~ userCredential:', userCredential);
+        router.navigate('/home');
       })
       .catch((err) => {
         console.log('🚀 ~ onSubmit ~ err:', err);
+      });
+  };
+  const handleLogin = (data: any) => {
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log('🚀 ~ .then ~ user:', user);
+        router.navigate('/home');
+      })
+      .catch((error) => {
+        console.log('🚀 ~ handleLogin ~ error:', error);
       });
   };
 
