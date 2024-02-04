@@ -17,7 +17,7 @@ This ToDoList Expo app is a simple mobile application built using Expo, React Na
 ### Clone Repository
 
 ```bash
-git clone https://github.com/your-username/todolist-expo-app.git
+git clone https://github.com/mirsahib/TechZu-Todolist.git
 cd todolist-expo-app
 npm run install
 npm run start
