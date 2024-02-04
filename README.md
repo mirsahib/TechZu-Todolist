@@ -6,9 +6,11 @@ This ToDoList Expo app is a simple mobile application built using Expo, React Na
 
 ## Screenshot
 
-<!-- https://youtu.be/KGLV8HjZMT4 -->
-
 ![Demo](https://github.com/mirsahib/TechZu-Todolist/blob/master/screenshot/demo.gif)
+
+## Video
+
+https://youtu.be/KGLV8HjZMT4
 
 ## Installation
 
